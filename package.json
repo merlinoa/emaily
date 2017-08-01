@@ -1,6 +1,6 @@
 {
   "name": "emaily",
-  "version": "0.0.0.9000",
+  "version": "0.0.1",
   "description": "Email survey app",
   "main": "app.js",
   "engines": {

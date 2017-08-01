@@ -14,7 +14,7 @@ app.get('/', (req, res) => {
 
 // set express to always start looking for files in the root directory
 // app.use(express.static(__dirname))
-app.use(bodyParser.urlencoded({ extended: true }))
+//app.use(bodyParser.urlencoded({ extended: true }))
 
 const PORT = process.env.PORT || 5000
 app.listen(PORT, () => {
