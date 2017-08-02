@@ -11,7 +11,11 @@ module.exports = app => {
     )
     // auth response from google
     app.get('/auth/google/callback',
-        passport.authenticate('google')
+        passport.authenticate('google'),
+        // redirect response from google OAuth
+        (req, res) => {
+            res.redirect('/surveys')
+        }
     )
 
     // logout
