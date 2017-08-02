@@ -19,24 +19,23 @@ passport.deserializeUser((id, done) => {
         })
 })
 
-// ---- begin passport auth
-passport.use(new GoogleStrategy({
+passport.use(
+    new GoogleStrategy(
+    {
         clientID: keys.googleClientID,
         clientSecret: keys.googleClientSecret,
         callbackURL: '/auth/google/callback',
         proxy: true
-    }, (accessToken, refreshToken, profile, done) => {
+    }, 
+    async (accessToken, refreshToken, profile, done) => {
         
-        User.findOne({googleId: profile.id})
-            .then(existingUser => {
-                if (existingUser) {
-                    // already have a record with given profile ID
-                    done(null, existingUser)
-                } else {
-                    // user not yet in db; create a new user
-                    new User({ googleId: profile.id }).save()
-                        .then(user => done(null, user))
-                }
-            })
+        const existingUser = await User.findOne({googleId: profile.id})
+
+        if (existingUser) {
+            done(null, existingUser)
+        } else {
+            const user = await new User({ googleId: profile.id }).save()
+            done(null, user)
+        }
     })
 )
