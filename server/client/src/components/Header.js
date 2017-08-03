@@ -1,26 +1,31 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
 
 class Header extends React.Component {
     
     renderContent() {
-        switch(this.props.auth) {
+        const auth = this.props.auth
+        switch(auth) {
             case null:
                 return ""
             case false:
                 return <a href="/auth/google">Login</a>
             default:
-                return "Logged In"
+                return <a href="/api/logout">Logout</a>
         }
-             
     }
     
     render() {
-        console.log(this.props)
+        const auth = this.props.auth
         return (
             <nav>
                 <div className="nav-wrapper container">
-                    <a href="/" className="brand-logo">Logo</a>
+                    <Link 
+                        to={auth ? "/surveys" : "/"} 
+                        className="brand-logo">
+                        Emaily
+                    </Link>
                     <ul id="nav-mobile" className="right hide-on-med-and-down">
                         <li>{this.renderContent()}</li>
                     </ul>
