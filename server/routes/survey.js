@@ -9,7 +9,9 @@ const Survey = mongoose.model('surveys')
 //const testSurvey = { title: 'my title', subject: 'my subject', body: 'this is the body', recipients: 'merlinoa88@gmail.com'}
 
 module.exports = (app) => {
-    app.get('api/surveys/thanks', (req, res) => {
+    app.get('/api/surveys/:surveyId/:choice', (req, res) => {
+        console.log(req.params.surveyId, req.params.choice)
+        
         res.send('Thanks for voting!')
     })
 
