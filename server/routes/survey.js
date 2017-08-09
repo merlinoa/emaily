@@ -1,3 +1,6 @@
+const _ = require('lodash')
+const Path = require('path-parser')
+const { URL } = require('url')
 const mongoose = require('mongoose')
 const requireLogin = require('../middlewares/requireLogin')
 const requireCredits = require('../middlewares/requireCredits')
@@ -10,13 +13,31 @@ const Survey = mongoose.model('surveys')
 
 module.exports = (app) => {
     app.get('/api/surveys/:surveyId/:choice', (req, res) => {
-        console.log(req.params.surveyId, req.params.choice)
-        
         res.send('Thanks for voting!')
     })
 
     app.post('/api/surveys/webhooks', (req, res) => {
-        console.log(req.body)
+        let events = _.map(req.body, (event) => {
+            const pathname = new URL(event.url).pathname
+            const p = new Path('/api/surveys/:surveyId/:choice')
+            // p.test will return wildcards (e.g. /:wildcard_name) in an object
+            // if p.test cant find all widcards it will return null
+            const match = p.test(pathname)
+            if (match) {
+                return { 
+                    email: event.email,
+                    surveyId: match.surveyId,
+                    choice: match.choice
+                }
+            }
+        })
+        
+        // remove elements from events that are undefined
+        events = _.compact(events)
+        // only want unique events.  do not want to record multiple survey responses from same person for the same survey
+        events = _.uniqBy(events, "surveyId", "email")
+
+        console.log(events)
         res.send({})
     })
 
